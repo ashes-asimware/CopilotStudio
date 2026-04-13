@@ -13,7 +13,7 @@ function Simulate-Remove {
     )
 
     if (Test-Path $Path) {
-        Write-Host "[DRY RUN] Would remove $Type: $Path" -ForegroundColor Yellow
+        Write-Host "[DRY RUN] Would remove ${Type}: $Path" -ForegroundColor Yellow
     }
 }
 
@@ -27,7 +27,7 @@ function Simulate-RemoveValue {
     if (Test-Path $KeyPath) {
         $item = Get-ItemProperty -Path $KeyPath -ErrorAction SilentlyContinue
         if ($item.PSObject.Properties.Name -contains $ValueName) {
-            Write-Host "[DRY RUN] Would remove registry value: $KeyPath -> $ValueName" -ForegroundColor Yellow
+            Write-Host "[DRY RUN] Would remove registry value: ${KeyPath} -> ${ValueName}" -ForegroundColor Yellow
         }
     }
 }
@@ -37,7 +37,7 @@ function Simulate-RemoveValue {
 # --------------------------------------------
 Write-Host "`n[1/7] Services" -ForegroundColor Cyan
 
-$claudeServices = Get-Service | Where-Object {
+$claudeServices = Get-Service -ErrorAction SilentlyContinue | Where-Object {
     $_.Name -like "*claude*" -or $_.DisplayName -like "*claude*" -or $_.DisplayName -like "*Anthropic*"
 }
 
