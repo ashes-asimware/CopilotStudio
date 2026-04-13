@@ -63,12 +63,12 @@ $claudeServices = Get-Service -ErrorAction SilentlyContinue | Where-Object {
 
 foreach ($svc in $claudeServices) {
     try {
-        Write-Host "Stopping service: ${svc.Name}" -ForegroundColor Yellow
-        Stop-Service -Name ${svc.Name} -Force -ErrorAction SilentlyContinue
-        Write-Host "Deleting service: ${svc.Name}" -ForegroundColor Yellow
-        sc.exe delete ${svc.Name} | Out-Null
+        Write-Host "Stopping service: $($svc.Name)" -ForegroundColor Yellow
+        Stop-Service -Name $svc.Name -Force -ErrorAction SilentlyContinue
+        Write-Host "Deleting service: $($svc.Name)" -ForegroundColor Yellow
+        sc.exe delete $svc.Name | Out-Null
     } catch {
-        Write-Host "Failed to stop/delete service ${svc.Name}: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Failed to stop/delete service $($svc.Name): $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
