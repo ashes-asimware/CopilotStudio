@@ -12,23 +12,23 @@ Write-Host "=== Claude / Anthropic deep cleanup starting ===" -ForegroundColor C
 # Helper: remove path if it exists
 function Remove-IfExists {
     param(
-        [Parameter(Mandatory = $true)][string]$Path,
-        [ValidateSet("File","Registry")][string]$Type = "File"
+        [Parameter(Mandatory = $true)][string]${Path},
+        [ValidateSet("File","Registry")][string]${Type} = "File"
     )
 
     try {
-        if (Test-Path $Path) {
-            if ($Type -eq "File") {
-                Write-Host "Removing folder/file: $Path" -ForegroundColor Yellow
-                Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+        if (Test-Path ${Path}) {
+            if (${Type} -eq "File") {
+                Write-Host "Removing folder/file: ${Path}" -ForegroundColor Yellow
+                Remove-Item -Path ${Path} -Recurse -Force -ErrorAction SilentlyContinue
             }
-            elseif ($Type -eq "Registry") {
-                Write-Host "Removing registry key: $Path" -ForegroundColor Yellow
-                Remove-Item -Path $Path -Recurse -Force -ErrorAction SilentlyContinue
+            elseif (${Type} -eq "Registry") {
+                Write-Host "Removing registry key: ${Path}" -ForegroundColor Yellow
+                Remove-Item -Path ${Path} -Recurse -Force -ErrorAction SilentlyContinue
             }
         }
     } catch {
-        Write-Host "Failed to remove $Path ($Type): $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Failed to remove ${Path} (${Type}): $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
@@ -48,7 +48,7 @@ function Remove-RegistryValueIfExists {
             }
         }
     } catch {
-        Write-Host "Failed to remove value $ValueName at $KeyPath: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Failed to remove value $ValueName at ${KeyPath}: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
@@ -57,18 +57,18 @@ function Remove-RegistryValueIfExists {
 # --------------------------------------------
 Write-Host "`n[1/7] Services" -ForegroundColor Cyan
 
-$claudeServices = Get-Service | Where-Object {
+$claudeServices = Get-Service -ErrorAction SilentlyContinue | Where-Object {
     $_.Name -like "*claude*" -or $_.DisplayName -like "*claude*" -or $_.DisplayName -like "*Anthropic*"
 }
 
 foreach ($svc in $claudeServices) {
     try {
-        Write-Host "Stopping service: $($svc.Name)" -ForegroundColor Yellow
-        Stop-Service -Name $svc.Name -Force -ErrorAction SilentlyContinue
-        Write-Host "Deleting service: $($svc.Name)" -ForegroundColor Yellow
-        sc.exe delete $svc.Name | Out-Null
+        Write-Host "Stopping service: ${svc.Name}" -ForegroundColor Yellow
+        Stop-Service -Name ${svc.Name} -Force -ErrorAction SilentlyContinue
+        Write-Host "Deleting service: ${svc.Name}" -ForegroundColor Yellow
+        sc.exe delete ${svc.Name} | Out-Null
     } catch {
-        Write-Host "Failed to stop/delete service $($svc.Name): $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "Failed to stop/delete service ${svc.Name}: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
